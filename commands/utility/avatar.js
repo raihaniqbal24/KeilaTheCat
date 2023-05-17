@@ -8,6 +8,6 @@ module.exports = {
 	async execute(interaction) {
 		const user = interaction.options.getUser('target');
 		if (user) return interaction.reply(`${user.username}'s avatar: ${user.displayAvatarURL({ dynamic: true })}`);
-		return interaction.reply(`Your avatar: ${interaction.user.displayAvatarURL()}`);
+		return interaction.reply({ content: `Your avatar: ${interaction.user.displayAvatarURL()}`, ephemeral: true });
 	},
 };
