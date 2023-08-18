@@ -31,7 +31,7 @@ module.exports = {
 			const queue = player.nodes.get(interaction.guildId);
       if (typeof(queue) != 'undefined') {
         trimString = (str, max) => ((str.length > max) ? `${str.slice(0, max - 3)}...` : str);
-          return interaction.reply({
+          return interaction.followUp({
             embeds: [
               {
                 title: 'Now Playing',

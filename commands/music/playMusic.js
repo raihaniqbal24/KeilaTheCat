@@ -24,7 +24,7 @@ module.exports = {
 				interaction.guild.members.me.voice.channelId &&
 				interaction.member.voice.channelId !== interaction.guild.members.me.voice.channelId
 			) {
-				return void interaction.reply({
+				return interaction.reply({
 					content: 'You are not in my voice channel!',
 					ephemeral: true,
 				});
@@ -60,8 +60,7 @@ module.exports = {
 				if (!queue.connection) await queue.connect(interaction.member.voice.channel);
 			} catch (e) {
 				console.log(e);
-				// void player.deleteQueue(interaction.guildId);
-				return void interaction.followUp({
+				return interaction.followUp({
 					content: 'Could not join your voice channel!',
 				});
 			}
@@ -69,7 +68,7 @@ module.exports = {
 			await interaction.followUp(`⏱ | Loading your ${searchResult.playlist ? 'playlist' : 'track'}...`);
 
       searchResult.playlist ? queue.addTrack(searchResult.tracks) : queue.addTrack(searchResult.tracks[0]);
-      if (!queue.playing) {
+      if (!queue.node.isPlaying()) {
 				await queue.node.play();
 			}
     } catch (error) {

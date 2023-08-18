@@ -23,7 +23,7 @@ module.exports = {
       }
     }
 
-    return void interaction.reply({
+    return interaction.reply({
       content: str,
       ephemeral: true,
     });

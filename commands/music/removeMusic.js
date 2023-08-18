@@ -35,9 +35,9 @@ module.exports = {
 			if (!queue || !queue.currentTrack) return interaction.followUp('❌ | No music is being played!');
 			const number = interaction.options.getInteger('number') - 1;
       if (number > queue.tracks.size)
-        return void interaction.followUp('❌ | Track number greater than queue depth!');
+        return interaction.followUp('❌ | Track number greater than queue depth!');
       queue.node.remove(number);
-      return void interaction.followUp(`✅ | Removed **${removedTrack}**!`);
+      return interaction.followUp(`✅ | Removed **${removedTrack}**!`);
 		} catch (error) {
 			console.log(error);
       interaction.followUp({

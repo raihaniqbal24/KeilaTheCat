@@ -44,13 +44,13 @@ module.exports = {
       });
       
       if (queueNumbers[1] > queue.tracks.size)
-        return void interaction.followUp('❌ | Track number greater than queue depth!');
+        return interaction.followUp('❌ | Track number greater than queue depth!');
       
         const track2 = queue.remove(queueNumbers[1]); // Remove higher track first to avoid list order issues
       const track1 = queue.remove(queueNumbers[0]);
       queue.insertTrack(track2, queueNumbers[0]); // Add track in lowest position first to avoid list order issues
       queue.insertTrack(track1, queueNumbers[1]);
-      return void interaction.followUp(`✅ | Swapped **${track1}** & **${track2}**!`);
+      return interaction.followUp(`✅ | Swapped **${track1}** & **${track2}**!`);
       } catch (error) {
 			console.log(error);
       interaction.followUp({

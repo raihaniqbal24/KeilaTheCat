@@ -32,12 +32,12 @@ module.exports = {
 			if (!queue || !queue.currentTrack) return interaction.followUp({content: '❌ | No music is being played!'});
       queue.tracks.shuffle();
       trimString = (str, max) => (str.length > max ? `${str.slice(0, max - 3)}...` : str);
-      return void interaction.followUp({
+      return interaction.followUp({
         embeds: [
           {
             title: 'Now Playing',
             description: trimString(
-              `The Current song playing is 🎶 | **${queue.currentTrack.author} - ${queue.currentTrack.title}**! \n 🎶 | ${queue}! `,
+              `The Current song playing is 🎶 | **${queue.currentTrack.author} - ${queue.currentTrack.title}**! \n 🎶`,
               4095,
             ),
           },

@@ -7,7 +7,7 @@ module.exports = {
 		.setDescription('Set song volume.')
     .addIntegerOption(option =>
       option.setName('volume')
-        .setDescription('Number between 1-100')
+        .setDescription('Number between 1-200')
         .setRequired(true)),
 	async execute(interaction) {
 		try {
@@ -36,9 +36,9 @@ module.exports = {
 			var volume = interaction.options.getInteger('volume');
       volume = Math.max(0, volume);
       volume = Math.min(200, volume);
-      queue.setVolume(volume*2);
+      queue.setVolume(volume);
 
-      returninteraction.followUp(`🔊 | Volume set to ${volume*2}`);
+      returninteraction.followUp(`🔊 | Volume set to ${volume}`);
 		} catch (error) {
 			console.log(error);
       interaction.followUp({
