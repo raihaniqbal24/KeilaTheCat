@@ -1,24 +1,24 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { useMasterPlayer } = require('discord-player');
+const { useMainPlayer } = require('discord-player');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('volume')
 		.setDescription('Set song volume.')
-    .addIntegerOption(option =>
-      option.setName('volume')
-        .setDescription('Number between 1-200')
-        .setRequired(true)),
+		.addIntegerOption(option =>
+			option.setName('volume')
+				.setDescription('Number between 1-200')
+				.setRequired(true)),
 	async execute(interaction) {
 		try {
-			const player = useMasterPlayer(); // Get the player instance that we created earlier
+			const player = useMainPlayer(); // Get the player instance that we created earlier
 			const channel = interaction.member.voice.channel;
-      if (!channel) {
-        return interaction.reply({
-          content: 'You are not in a voice channel!',
-          ephemeral: true,
-        });
-      }
+			if (!channel) {
+				return interaction.reply({
+					content: 'You are not in a voice channel!',
+					ephemeral: true,
+				});
+			}
 
 			if (
 				interaction.guild.members.me.voice.channelId &&
@@ -32,18 +32,18 @@ module.exports = {
 
 			await interaction.deferReply();
 			const queue = player.nodes.get(interaction.guildId);
-			if (!queue || !queue.currentTrack) return interaction.followUp({content: '❌ | No music is being played!'});
-			var volume = interaction.options.getInteger('volume');
-      volume = Math.max(0, volume);
-      volume = Math.min(200, volume);
-      queue.setVolume(volume);
+			if (!queue || !queue.currentTrack) return interaction.followUp({ content: '❌ | No music is being played!' });
+			let volume = interaction.options.getInteger('volume');
+			volume = Math.max(0, volume);
+			volume = Math.min(200, volume);
+			queue.node.setVolume(volume);
 
-      returninteraction.followUp(`🔊 | Volume set to ${volume}`);
+			return interaction.followUp(`🔊 | Volume set to ${volume}`);
 		} catch (error) {
 			console.log(error);
-      interaction.followUp({
-        content: '❌ | There was an error trying to execute that command',
-      });
+			interaction.followUp({
+				content: '❌ | There was an error trying to execute that command',
+			});
 		}
 	},
 };

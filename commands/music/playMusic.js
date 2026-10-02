@@ -1,24 +1,24 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { useMasterPlayer } = require('discord-player');
+const { useMainPlayer, QueryType } = require('discord-player');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('play')
 		.setDescription('Play song(s).')
 		.addStringOption(option =>
-			option.setName('ytlink')
-				.setDescription('Music link from youtube')
+			option.setName('query')
+				.setDescription('Song name or link (YouTube, Spotify, SoundCloud, ...)')
 				.setRequired(true)),
 	async execute(interaction) {
-    try {
-			const player = useMasterPlayer(); // Get the player instance that we created earlier
+		try {
+			const player = useMainPlayer(); // Get the player instance that we created earlier
 			const channel = interaction.member.voice.channel;
-      if (!channel) {
-        return interaction.reply({
-          content: 'You are not in a voice channel!',
-          ephemeral: true,
-        });
-      }
+			if (!channel) {
+				return interaction.reply({
+					content: 'You are not in a voice channel!',
+					ephemeral: true,
+				});
+			}
 
 			if (
 				interaction.guild.members.me.voice.channelId &&
@@ -28,18 +28,22 @@ module.exports = {
 					content: 'You are not in my voice channel!',
 					ephemeral: true,
 				});
-			}			
+			}
 
-      const query = interaction.options.getString('ytlink', true);
+			const query = interaction.options.getString('query', true);
 
 			// let's defer the interaction as things can take time to process
 			await interaction.deferReply();
-			const searchResult = await player.search(query, { requestedBy: interaction.user });
+			// links are resolved by their own extractor, plain text is searched on YouTube
+			const searchResult = await player.search(query, {
+				requestedBy: interaction.user,
+				fallbackSearchEngine: QueryType.YOUTUBE_SEARCH,
+			});
 			// console.log(searchResult);
-      if (!searchResult.hasTracks()) {
-        // If player didn't find any songs for this query
-        await interaction.reply(`We found no tracks for ${query}!`);
-        return;
+			if (!searchResult.hasTracks()) {
+				// If player didn't find any songs for this query
+				await interaction.followUp(`We found no tracks for ${query}!`);
+				return;
 			}
 
 			const queue = player.nodes.create(interaction.guild, {
@@ -67,15 +71,15 @@ module.exports = {
 
 			await interaction.followUp(`⏱ | Loading your ${searchResult.playlist ? 'playlist' : 'track'}...`);
 
-      searchResult.playlist ? queue.addTrack(searchResult.tracks) : queue.addTrack(searchResult.tracks[0]);
-      if (!queue.node.isPlaying()) {
+			searchResult.playlist ? queue.addTrack(searchResult.tracks) : queue.addTrack(searchResult.tracks[0]);
+			if (!queue.node.isPlaying()) {
 				await queue.node.play();
 			}
-    } catch (error) {
-      console.log(error);
-      interaction.followUp({
-        content: '❌ | There was an error trying to execute that command',
-      });
-    }
+		} catch (error) {
+			console.log(error);
+			interaction.followUp({
+				content: '❌ | There was an error trying to execute that command',
+			});
+		}
 	},
 };

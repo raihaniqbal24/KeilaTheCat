@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { useMasterPlayer } = require('discord-player');
+const { useMainPlayer } = require('discord-player');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -8,14 +8,14 @@ module.exports = {
 	// TODO: addOption for song title and singer
 	async execute(interaction) {
 		try {
-			const player = useMasterPlayer(); // Get the player instance that we created earlier
+			const player = useMainPlayer(); // Get the player instance that we created earlier
 			const channel = interaction.member.voice.channel;
-      if (!channel) {
-        return interaction.reply({
-          content: 'You are not in a voice channel!',
-          ephemeral: true,
-        });
-      }
+			if (!channel) {
+				return interaction.reply({
+					content: 'You are not in a voice channel!',
+					ephemeral: true,
+				});
+			}
 
 			if (
 				interaction.guild.members.me.voice.channelId &&
@@ -29,14 +29,14 @@ module.exports = {
 
 			await interaction.deferReply();
 			const queue = player.nodes.get(interaction.guildId);
-			if (!queue || !queue.currentTrack) return interaction.followUp({content: '❌ | No music is being played!'});
+			if (!queue || !queue.currentTrack) return interaction.followUp({ content: '❌ | No music is being played!' });
 			queue.node.pause();
-			return interaction.followUp({content: '⏸ | Song paused!'});
+			return interaction.followUp({ content: '⏸ | Song paused!' });
 		} catch (error) {
 			console.log(error);
-      interaction.followUp({
-        content: '❌ | There was an error trying to execute that command',
-      });
+			interaction.followUp({
+				content: '❌ | There was an error trying to execute that command',
+			});
 		}
 	},
 };

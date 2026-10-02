@@ -36,9 +36,9 @@ const rest = new REST().setToken(process.env.CLIENT_TOKEN);
 		console.log(`Started refreshing ${commands.length} application (/) commands.`);
 
 		// The put method is used to fully refresh all commands in the guild with the current set
-    // Reference: https://discordjs.guide/creating-your-bot/command-deployment.html#global-commands
+		// Reference: https://discordjs.guide/creating-your-bot/command-deployment.html#global-commands
 		const data = await rest.put(
-			Routes.applicationGuildCommands(process.env.CLIEnt_ID, process.env.GUILD_ID),
+			Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.GUILD_ID),
 			{ body: commands },
 		);
 
